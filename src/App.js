@@ -1,10 +1,9 @@
-import './App.css';
-import Header from './components/header';
+import Wrap from "./components/wrap";
 
 function App() {
   return (
     <>
-      <Header />
+      <Wrap />
     </>
   );
 }
