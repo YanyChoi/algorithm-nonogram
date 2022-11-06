@@ -1,11 +1,10 @@
-import { Grid, Slider } from "@mui/material";
+import { Button, Grid, Slider } from "@mui/material";
 import { useContext } from "react";
 import { Context } from "../../context/context";
 import { ContextType } from "../../types/context";
 
 const Header = () => {
-  const { tableSize, setTableSize } = useContext(Context) as ContextType;
-
+  const { tableSize, setTableSize, isGameStarted, setIsGameStarted, setIsLoading } = useContext(Context) as ContextType;
   return (
     <Grid
       container
@@ -23,21 +22,25 @@ const Header = () => {
       </h1>
       <p>Choose Table Size</p>
       <Slider
+        disabled={isGameStarted}
         aria-label="Table Size"
         defaultValue={tableSize}
         valueLabelDisplay="auto"
         step={1}
         min={1}
-        max={20}
+        max={15}
         onChange={(e, value) => {
+          setIsLoading(true);
           const newSize = Array.isArray(value) ? value[0] : value;
           setTableSize(newSize);
+          setIsLoading(false);
         }}
         style={{
           width: "300px",
           margin: "0 auto",
         }}
       />
+      <Button variant="text" onClick={() => {setIsGameStarted(!isGameStarted)}}>{isGameStarted ? 'Reset' : 'Start'}</Button>
     </Grid>
   );
 };
