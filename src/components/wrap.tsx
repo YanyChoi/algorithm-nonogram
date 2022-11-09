@@ -1,4 +1,5 @@
 import Header from "./header/header";
+import HelpButton from "./help-button";
 import Table from "./table/table";
 
 
@@ -8,6 +9,7 @@ const Wrap = () => {
         <>
             <Header />
             <Table />
+            <HelpButton />
         </>
     )
 }

@@ -24,7 +24,8 @@ const Block = ({
       width={30}
       height={30}
       style={{
-        border: "1px solid black",
+        border: "1px solid grey",
+        borderRadius: '5px',
         backgroundColor: `${output === "O" ? "black" : ""}`,
       }}
       onClick={async () => {
@@ -44,9 +45,14 @@ const Block = ({
     >
       <p
         style={{
+          fontSize: '15pt',
           color: `${output === "X" ? "red" : "black"}`,
           margin: "0 auto",
-          paddingTop: "4px",
+          padding: "2px 0px 0px 1px",
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          msUserSelect: 'none',
+          userSelect: 'none'
         }}
       >
         {output === "X" ? output : ""}

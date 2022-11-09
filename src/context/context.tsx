@@ -8,6 +8,8 @@ const ContextProvider = ({children}: {children: JSX.Element}) => {
     const [tableSize, setTableSize] = useState<number>(15);
     const [isGameStarted, setIsGameStarted] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [rowConditions, setRowConditions] = useState<Array<Array<number>>>([]);
+    const [columnConditions, setColumnConditions] = useState<Array<Array<number>>>([]);
 
     return (
         <Context.Provider value={{
@@ -16,7 +18,11 @@ const ContextProvider = ({children}: {children: JSX.Element}) => {
             isGameStarted,
             setIsGameStarted,
             isLoading,
-            setIsLoading
+            setIsLoading,
+            rowConditions,
+            setRowConditions,
+            columnConditions,
+            setColumnConditions
         }}>
             {children}
         </Context.Provider>

@@ -7,10 +7,12 @@ const LineHeader = ({ direction }: { direction: String }) => {
         container
         direction="row"
         justifyContent="space-between"
-        width={200}
+        width={150}
         height={30}
+        border="thick"
         style={{
-          border: "1 solid black",
+            borderRadius: '8px',
+            backgroundColor: 'lightgrey'
         }}
       ></Grid>
     );
@@ -21,9 +23,10 @@ const LineHeader = ({ direction }: { direction: String }) => {
         direction="column"
         justifyContent="space-between"
         width={30}
-        height={200}
+        height={150}
         style={{
-          border: "1 solid black",
+            borderRadius: '8px',
+            backgroundColor: 'lightgrey'
         }}
       ></Grid>
     );

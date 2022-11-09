@@ -23,16 +23,17 @@ const Table = () => {
       {isLoading ? (
         <CircularProgress />
       ) : (
-        <Grid container flexDirection="column" style={{}}>
+        <Grid container flexDirection="column" style={{
+        }}>
           <Grid
             container
             flexDirection="row"
             justifyContent="space-between"
-            width={32 * tableSize + 200}
-            height={200}
+            width={33 * tableSize + 150}
+            height={155}
             style={{ margin: "0 auto" }}
           >
-            <div style={{ width: 200, height: 200 }}></div>
+            <div style={{ width: 150, height: 150 }}></div>
             {table.map((row) => {
               return <LineHeader direction="column" />;
             })}
@@ -41,8 +42,8 @@ const Table = () => {
             container
             flexDirection="column"
             justifyContent="space-between"
-            width={32 * tableSize + 200}
-            height={32 * tableSize}
+            width={33 * tableSize + 150}
+            height={33 * tableSize}
             style={{ margin: "0 auto" }}
           >
             {table.map((row, rowIndex) => {
@@ -52,7 +53,6 @@ const Table = () => {
                   flexDirection="row"
                   justifyContent="space-between"
                 >
-                  {/* <div style={{ width: "200px", height: "30px" }}></div> */}
                   <LineHeader direction="row" />
                   {row.map((value, columnIndex) => (
                     <Block
