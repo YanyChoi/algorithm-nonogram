@@ -1,34 +1,76 @@
 import { Grid } from "@mui/material";
+import { useContext } from "react";
+import { Context } from "../../context/context";
+import { ContextType } from "../../types/context";
 
-const LineHeader = ({ direction }: { direction: String }) => {
+const LineHeader = ({
+  direction,
+  index,
+}: {
+  direction: String;
+  index: number;
+}) => {
+  const { columnConditions, rowConditions, width, height } = useContext(
+    Context
+  ) as ContextType;
   if (direction === "row") {
     return (
       <Grid
         container
         direction="row"
-        justifyContent="space-between"
-        width={150}
+        justifyContent="end"
+        width={width}
         height={30}
         border="thick"
         style={{
-            borderRadius: '8px',
-            backgroundColor: 'lightgrey'
+          borderRadius: "8px",
+          backgroundColor: "lightgrey",
+          marginRight: "5px",
         }}
-      ></Grid>
+      >
+        {rowConditions[index]?.map((row) => (
+          <p
+            style={{
+              width: "17px",
+              height: "30px",
+              fontSize: "12px",
+              margin: "0px",
+              textAlign: "center",
+              paddingTop: "8px",
+            }}
+          >
+            {row}
+          </p>
+        ))}
+      </Grid>
     );
   } else if (direction === "column") {
     return (
       <Grid
         container
         direction="column"
-        justifyContent="space-between"
+        justifyContent="end"
         width={30}
-        height={150}
+        height={height}
         style={{
-            borderRadius: '8px',
-            backgroundColor: 'lightgrey'
+          borderRadius: "8px",
+          backgroundColor: "lightgrey",
         }}
-      ></Grid>
+      >
+        {columnConditions[index]?.map((column) => (
+          <p
+            style={{
+              width: "30px",
+              height: "20px",
+              fontSize: "12px",
+              margin: "0px",
+              textAlign: "center",
+            }}
+          >
+            {column}
+          </p>
+        ))}
+      </Grid>
     );
   } else {
     return <></>;

@@ -7,13 +7,12 @@ import Block from "./block";
 import LineHeader from "./line-header";
 
 const Table = () => {
-  const { tableSize, isLoading } = useContext(Context) as ContextType;
-  const [table, setTable] = useState<Array<Array<String>>>([]);
+  const { tableSize, isLoading, width, height, table, setTable } = useContext(Context) as ContextType;
   useEffect(() => {
     setTable(setTableBySize(tableSize));
   }, [tableSize]);
 
-  const onChange = (x: number, y: number, value: String) => {
+  const onChange = (x: number, y: number, value: boolean) => {
     let newTable = table;
     newTable[x][y] = value;
     setTable(newTable);
@@ -29,20 +28,20 @@ const Table = () => {
             container
             flexDirection="row"
             justifyContent="space-between"
-            width={33 * tableSize + 150}
-            height={155}
+            width={33 * tableSize + height + 5}
+            height={height + 5}
             style={{ margin: "0 auto" }}
           >
-            <div style={{ width: 150, height: 150 }}></div>
-            {table.map((row) => {
-              return <LineHeader direction="column" />;
+            <div style={{ width: width + 5, height: height }}></div>
+            {table.map((row, columnIndex) => {
+              return <LineHeader direction="column" index={columnIndex} />;
             })}
           </Grid>
           <Grid
             container
             flexDirection="column"
             justifyContent="space-between"
-            width={33 * tableSize + 150}
+            width={33 * tableSize + height + 5}
             height={33 * tableSize}
             style={{ margin: "0 auto" }}
           >
@@ -53,7 +52,7 @@ const Table = () => {
                   flexDirection="row"
                   justifyContent="space-between"
                 >
-                  <LineHeader direction="row" />
+                  <LineHeader direction="row" index={rowIndex}/>
                   {row.map((value, columnIndex) => (
                     <Block
                       x={rowIndex}
