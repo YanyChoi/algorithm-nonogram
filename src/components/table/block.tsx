@@ -12,12 +12,25 @@ const Block = ({
   x: number;
   y: number;
 }) => {
-  const { isGameStarted } = useContext(Context) as ContextType;
-  const [output, setOutput] = useState<String>("");
+  const display = (type: boolean | null) => {
+    if (type) {
+      return "O";
+    } else if (type === null) {
+      return "";
+    } else {
+      return "X";
+    }
+  };
+  const { isGameStarted, mouseDown, setMouseDown, table } = useContext(
+    Context
+  ) as ContextType;
+  const [changed, setChanged] = useState<boolean>(false);
+
   useEffect(() => {
-    if (!isGameStarted)
-    setOutput("");
-  }, [isGameStarted]);
+    if (!mouseDown) {
+      setChanged(false);
+    }
+  }, [mouseDown]);
   return (
     <Grid
       container
@@ -25,37 +38,51 @@ const Block = ({
       height={30}
       style={{
         border: "1px solid grey",
-        borderRadius: '5px',
-        backgroundColor: `${output === "O" ? "black" : ""}`,
+        borderRadius: "5px",
+        backgroundColor: `${table[x][y] ? "black" : ""}`,
       }}
-      onClick={async () => {
-        if (isGameStarted) {
-          if (output === "O") {
-            await onChange(x, y, "X");
-            setOutput("X");
-          } else if (output === "X") {
-            await onChange(x, y, "");
-            setOutput("");
+      onMouseOver={async () => {
+        if (isGameStarted && mouseDown && !changed) {
+          if (table[x][y]) {
+            await onChange(x, y, false);
+          } else if (table[x][y] === false) {
+            await onChange(x, y, null);
           } else {
-            await onChange(x, y, "O");
-            setOutput("O");
+            await onChange(x, y, true);
           }
         }
+        setChanged(true);
+      }}
+      onMouseDown={async (e) => {
+        e.preventDefault();
+        if (isGameStarted) {
+          if (table[x][y]) {
+            await onChange(x, y, false);
+          } else if (table[x][y] === false) {
+            await onChange(x, y, null);
+          } else {
+            await onChange(x, y, true);
+          }
+        }
+        setMouseDown(true);
+      }}
+      onMouseUp={() => {
+        setMouseDown(false);
       }}
     >
       <p
         style={{
-          fontSize: '15pt',
-          color: `${output === "X" ? "red" : "black"}`,
+          fontSize: "15pt",
+          color: `${display(table[x][y]) === "X" ? "red" : "black"}`,
           margin: "0 auto",
           padding: "2px 0px 0px 1px",
-          WebkitUserSelect: 'none',
-          MozUserSelect: 'none',
-          msUserSelect: 'none',
-          userSelect: 'none'
+          WebkitUserSelect: "none",
+          MozUserSelect: "none",
+          msUserSelect: "none",
+          userSelect: "none",
         }}
       >
-        {output === "X" ? output : ""}
+        {display(table[x][y])}
       </p>
     </Grid>
   );

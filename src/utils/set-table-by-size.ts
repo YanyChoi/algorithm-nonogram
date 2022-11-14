@@ -4,7 +4,7 @@ export const setTableBySize = (tableSize: number) => {
     for (let i = 0; i < tableSize; i++) {
         const tableRow = [];
         for (let j = 0; j < tableSize; j++) {
-            tableRow.push("");
+            tableRow.push(null);
         }
         table.push(tableRow);
     }
