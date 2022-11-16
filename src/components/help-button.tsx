@@ -1,4 +1,5 @@
 import { Button, Grid } from "@mui/material";
+import autoSolve from "../utils/auto-solve";
 
 const HelpButton = () => {
   return (
@@ -10,7 +11,9 @@ const HelpButton = () => {
         height: "50px",
         fontSize: "20pt",
       }}
-      onClick={() => {}}
+      onClick={() => {
+        autoSolve();
+      }}
     >
       Help!
     </Button>
