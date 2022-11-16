@@ -1,7 +1,13 @@
-import { Button, Grid } from "@mui/material";
+import { Button } from "@mui/material";
+import { useContext } from "react";
+import { Context } from "../context/context";
+import { ContextType } from "../types/context";
 import autoSolve from "../utils/auto-solve";
 
 const HelpButton = () => {
+  const { columnConditions, rowConditions, table } = useContext(
+    Context
+  ) as ContextType;
   return (
     <Button
       variant="contained"
@@ -12,10 +18,14 @@ const HelpButton = () => {
         fontSize: "20pt",
       }}
       onClick={() => {
-        autoSolve();
+        autoSolve({
+          column: columnConditions,
+          row: rowConditions,
+          table: table,
+        });
       }}
     >
-      Help!
+      Automize
     </Button>
   );
 };

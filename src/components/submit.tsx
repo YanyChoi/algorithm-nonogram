@@ -12,15 +12,12 @@ const SubmitButton = () => {
     let correct = true;
     for (let i = 0; i < tableSize; i++) {
       for (let j = 0; j < tableSize; j++) {
-        if (table[i][j] === null) {
-          setFinalMessage("Table not finished.");
-          correct = false;
-          break;
-        }
-        if (table[i][j] !== answer[i][j]) {
-          setFinalMessage("Wrong answer. Please try again.");
-          correct = false;
-          break;
+        if (answer[i][j] === true) {
+          if (table[i][j] !== true) {
+            setFinalMessage("Wrong answer. Please try again.");
+            correct = false;
+            break;
+          }
         }
       }
     }
