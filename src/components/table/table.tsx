@@ -7,7 +7,16 @@ import Block from "./block";
 import LineHeader from "./line-header";
 
 const Table = () => {
-  const { tableSize, isLoading, width, height, table, setTable } = useContext(Context) as ContextType;
+  const {
+    tableSize,
+    isLoading,
+    width,
+    height,
+    table,
+    setTable,
+    mouseDown,
+    setMouseDown,
+  } = useContext(Context) as ContextType;
   useEffect(() => {
     setTable(setTableBySize(tableSize));
   }, [tableSize]);
@@ -22,8 +31,7 @@ const Table = () => {
       {isLoading ? (
         <CircularProgress />
       ) : (
-        <Grid container flexDirection="column" style={{
-        }}>
+        <Grid container flexDirection="column" style={{}}>
           <Grid
             container
             flexDirection="row"
@@ -44,6 +52,11 @@ const Table = () => {
             width={33 * tableSize + width + 5}
             height={33 * tableSize}
             style={{ margin: "0 auto" }}
+            onMouseLeave={() => {
+              if (mouseDown) {
+                setMouseDown(false);
+              }
+            }}
           >
             {table.map((row, rowIndex) => {
               return (
@@ -52,13 +65,9 @@ const Table = () => {
                   flexDirection="row"
                   justifyContent="space-between"
                 >
-                  <LineHeader direction="row" index={rowIndex}/>
+                  <LineHeader direction="row" index={rowIndex} />
                   {row.map((value, columnIndex) => (
-                    <Block
-                      x={rowIndex}
-                      y={columnIndex}
-                      onChange={onChange}
-                    />
+                    <Block x={rowIndex} y={columnIndex} onChange={onChange} />
                   ))}
                 </Grid>
               );

@@ -5,9 +5,8 @@ import { ContextType } from "../types/context";
 import autoSolve from "../utils/auto-solve";
 
 const HelpButton = () => {
-  const { columnConditions, rowConditions, table, isGameStarted } = useContext(
-    Context
-  ) as ContextType;
+  const { columnConditions, rowConditions, table, isGameStarted, setTable } =
+    useContext(Context) as ContextType;
   return (
     <Button
       disabled={!isGameStarted}
@@ -18,12 +17,13 @@ const HelpButton = () => {
         height: "50px",
         fontSize: "20pt",
       }}
-      onClick={() => {
-        autoSolve({
-          column: columnConditions,
-          row: rowConditions,
+      onClick={async () => {
+        const data = await autoSolve({
+          columnConditions: columnConditions,
+          rowConditions: rowConditions,
           table: table,
         });
+        setTable(data);
       }}
     >
       Automize

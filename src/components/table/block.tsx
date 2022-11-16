@@ -52,7 +52,6 @@ const Block = ({
         backgroundColor: `${value === "O" ? "black" : "white"}`,
       }}
       onMouseOver={async () => {
-        console.log(isGameStarted, mouseDown, !changed);
         if (isGameStarted && mouseDown && !changed) {
           if (value === "O") {
             setValue("X");
