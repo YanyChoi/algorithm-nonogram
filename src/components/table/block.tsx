@@ -25,12 +25,22 @@ const Block = ({
     Context
   ) as ContextType;
   const [changed, setChanged] = useState<boolean>(false);
-
+  const [value, setValue] = useState<String>("");
   useEffect(() => {
     if (!mouseDown) {
       setChanged(false);
     }
   }, [mouseDown]);
+
+  useEffect(() => {
+    if (table[x][y] === true) {
+      setValue("O");
+    } else if (table[x][y] === false) {
+      setValue("X");
+    } else {
+      setValue("");
+    }
+  }, [table]);
   return (
     <Grid
       container
@@ -39,31 +49,40 @@ const Block = ({
       style={{
         border: "1px solid grey",
         borderRadius: "5px",
-        backgroundColor: `${table[x][y] ? "black" : ""}`,
+        backgroundColor: `${value === "O" ? "black" : "white"}`,
       }}
       onMouseOver={async () => {
+        console.log(isGameStarted, mouseDown, !changed);
         if (isGameStarted && mouseDown && !changed) {
-          if (table[x][y]) {
+          if (value === "O") {
+            setValue("X");
             await onChange(x, y, false);
-          } else if (table[x][y] === false) {
+          } else if (value === "X") {
+            setValue("");
             await onChange(x, y, null);
           } else {
+            setValue("O");
             await onChange(x, y, true);
           }
+
+          setChanged(true);
         }
-        setChanged(true);
       }}
       onMouseDown={async (e) => {
         e.preventDefault();
         if (isGameStarted) {
-          if (table[x][y]) {
+          if (value === "O") {
             await onChange(x, y, false);
-          } else if (table[x][y] === false) {
+            setValue("X");
+          } else if (value === "X") {
+            setValue("");
             await onChange(x, y, null);
           } else {
             await onChange(x, y, true);
+            setValue("O");
           }
         }
+        setChanged(true);
         setMouseDown(true);
       }}
       onMouseUp={() => {
@@ -73,7 +92,7 @@ const Block = ({
       <p
         style={{
           fontSize: "15pt",
-          color: `${display(table[x][y]) === "X" ? "red" : "black"}`,
+          color: `${value === "X" ? "red" : "black"}`,
           margin: "0 auto",
           padding: "2px 0px 0px 1px",
           WebkitUserSelect: "none",
@@ -82,7 +101,7 @@ const Block = ({
           userSelect: "none",
         }}
       >
-        {display(table[x][y])}
+        {value}
       </p>
     </Grid>
   );

@@ -4,9 +4,14 @@ import { Context } from "../context/context";
 import { ContextType } from "../types/context";
 
 const SubmitButton = () => {
-  const { table, answer, tableSize, setFinalMessage, setEndTime } = useContext(
-    Context
-  ) as ContextType;
+  const {
+    table,
+    answer,
+    isGameStarted,
+    tableSize,
+    setFinalMessage,
+    setEndTime,
+  } = useContext(Context) as ContextType;
 
   const onClick = () => {
     let correct = true;
@@ -28,6 +33,7 @@ const SubmitButton = () => {
   };
   return (
     <Button
+      disabled={!isGameStarted}
       variant="contained"
       style={{
         marginTop: "30px",

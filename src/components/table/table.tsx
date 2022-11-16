@@ -28,7 +28,7 @@ const Table = () => {
             container
             flexDirection="row"
             justifyContent="space-between"
-            width={33 * tableSize + height + 5}
+            width={33 * tableSize + width}
             height={height + 5}
             style={{ margin: "0 auto" }}
           >
@@ -41,7 +41,7 @@ const Table = () => {
             container
             flexDirection="column"
             justifyContent="space-between"
-            width={33 * tableSize + height + 5}
+            width={33 * tableSize + width + 5}
             height={33 * tableSize}
             style={{ margin: "0 auto" }}
           >
