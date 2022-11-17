@@ -18,7 +18,7 @@ const HelpButton = () => {
         fontSize: "20pt",
       }}
       onClick={async () => {
-        const data = await autoSolve({
+        const data = autoSolve({
           columnConditions: columnConditions,
           rowConditions: rowConditions,
           table: table,
