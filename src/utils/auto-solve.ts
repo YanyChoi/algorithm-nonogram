@@ -7,21 +7,40 @@ const autoSolve = ({rowConditions, columnConditions, table} :{ rowConditions: Ar
   var current_table;
   var count = 0;
 
+
+  
   // 노베이스
   current_table = noBaseFunc3({ SIZE: table.length, row: rowConditions, column: columnConditions }); // 노베이스 상황일 때 채워줌
-
+  printTable(current_table);
   do {
     count++;
     copyTable(previous_table, current_table);
     fill(current_table, rowConditions, columnConditions); // X가 아닌값을 정렬했을때 모든 조건과 일치하면 채워줌
-    processX(current_table, rowConditions, columnConditions); // X process
     fillAdd(current_table, rowConditions, columnConditions); // 조건 가장 큰 값과 버퍼 가장 큰 값이 서로 같고 하나씩 밖에 없으면 채워줌
+    fillEnds(current_table, rowConditions, columnConditions); //끝 쪽부터 최대로 채울 수 있는 공간 탐색 ([끝쪽 빈 공간 개수] == [끝 조건 숫자] 이고 하나라도 색이 칠해진 경우, X도 고려)
+    decreaseSize(current_table, rowConditions, columnConditions); // 양옆이 X일때 맵 사이즈가 줄었다고 가정하고 색칠하기
+    printTable(current_table);
     processX(current_table, rowConditions, columnConditions); // X process
+    printTable(current_table);
     console.log("COUNT : ", count);
   } while(!isEqualTable(current_table, previous_table)); // 둘이 같지 않을 때 까지
-  // } while(false);
+  // } while(false);\
+  printTable(current_table);
   return current_table;
 };
+
+//현재 테이블 상태 로그
+const printTable = (table: Array<Array<boolean|null>>) =>{
+  let i = 0, j = 0, line = "";
+  const SIZE = table.length;
+  for (i = 0; i < SIZE; i++){
+    for (j = 0; j < SIZE; j++){
+      line += table[i][j] + " ";
+    }
+    line += '\n';
+  }
+  console.log(line);
+}
 
 //공백 포함
 const sumAll = (arr: Array<number>) => {
@@ -51,10 +70,104 @@ const isEqualTable = (arr1 : Array<Array<boolean|null>>, arr2 : Array<Array<bool
 }
 const processX = (table: Array<Array<boolean | null>>, rowConditions: Array<Array<number>>, columnConditions: Array<Array<number>>) => {
   compeleteX(table, rowConditions, columnConditions); // 한줄에서 X만 넣으면 완벽한 상황일때 채워줌
+  sequenceX(table, rowConditions, columnConditions); //가장 큰 조건값과 빈 공간의 최대 크기가 같으면 채우기 (X로 구분됨)
   XCondition4({table: table, row: rowConditions, column: columnConditions}); // 왔다갔다 하면서 체크해서 X
 }
 
-/* 나중에 테이블 연결할 필요 있음 */
+// 양옆이 X일때 맵 사이즈가 줄었다고 가정하고 색칠하기
+const decreaseSize = (table: Array<Array<boolean | null>>, row: Array<Array<number>>, column: Array<Array<number>>) => {
+  var h = 0, w = 0, i = 0, j = 0;
+  var SIZE = row.length;
+  var ptr = 0, front_ptr = 0, tail_ptr = 0, sum = 0;
+  
+  for(w = 0 ; w < SIZE ; w++) {
+    // 위 -> 아래
+    front_ptr = 0;
+    for(h = 0 ; h < SIZE ; h++) {
+      if(table[h][w] == false) {
+        front_ptr++;
+      } else {
+        break;
+      }
+    }
+    
+    // 아래 -> 위
+    tail_ptr = 0;
+    for(h = SIZE - 1 ; h >= 0 ; h--) {
+      if(table[h][w] == false) {
+        tail_ptr++;
+      } else {
+        break;
+      }
+    }
+
+    // 행의 칸 차지 합
+    sum = 0;
+    for(i = 0; i < column[w].length ; i++) {
+      sum += column[w][i];
+    }
+    sum += (column[w].length-1);
+
+    // 만약 양쪽 X를 제외한 크기가 꽉 채웠을 때 크기와 갔다면
+    if(SIZE - (front_ptr + tail_ptr) == sum) {
+      ptr = front_ptr; // ptr을 당겨줌
+      // 조건의 갯수만큼 반복함
+      for(i = 0; i < column[w].length ; i++) {
+        // 조건의 숫자만큼 색칠 함
+        for(j = 0; j < column[w][i] ; j++) {
+          table[ptr][w] = true;
+          ptr++;
+        }
+        ptr++;
+      }
+    }
+  }
+
+ 
+  for(h = 0 ; h < SIZE ; h++) {
+     // 좌 -> 우
+    front_ptr = 0;
+    for(w = 0 ; w < SIZE ; w++) {
+      if(table[h][w] == false) {
+        front_ptr++;
+      } else {
+        break;
+      }
+    }
+    
+    // 우 -> 좌
+    tail_ptr = 0;
+    for(w = SIZE - 1 ; w >= 0 ; w--) {
+      if(table[h][w] == false) {
+        tail_ptr++;
+      } else {
+        break;
+      }
+    }
+
+    // 행의 칸 차지 합
+    sum = 0;
+    for(i = 0; i < row[h].length ; i++) {
+      sum += row[h][i];
+    }
+    sum += (row[h].length-1);
+
+    // 만약 양쪽 X를 제외한 크기가 꽉 채웠을 때 크기와 갔다면
+    if(SIZE - (front_ptr + tail_ptr) == sum) {
+      ptr = front_ptr; // ptr을 당겨줌
+      // 조건의 갯수만큼 반복함
+      for(i = 0; i < row[h].length ; i++) {
+        // 조건의 숫자만큼 색칠 함
+        for(j = 0; j < row[h][i] ; j++) {
+          table[h][ptr] = true;
+          ptr++;
+        }
+        ptr++;
+      }
+    }
+  }  
+}
+
 const noBaseFunc3 = ({ SIZE, row, column }: {SIZE: number, row: Array<Array<number>>, column: Array<Array<number>>}) => {
 
   const new_table: Array<Array<boolean | null>> = [];
@@ -113,6 +226,143 @@ const noBaseFunc3 = ({ SIZE, row, column }: {SIZE: number, row: Array<Array<numb
   return new_table;
 };
 
+//끝 쪽부터 최대로 채울 수 있는 공간 탐색 ([끝쪽 빈 공간 개수] == [끝 조건 숫자] 이고 하나라도 색이 칠해진 경우, X도 고려)
+const fillEnds = (table: Array<Array<boolean|null>>, row: Array<Array<number>>, column: Array<Array<number>>) =>{
+  let i, j, min, max;
+  let isFilled;
+  const SIZE = table.length;
+
+  //가로 체크
+  for (i = 0; i < SIZE; i++){
+    //색칠 가능한 최초의 위치 탐색(좌 -> 우)
+    min = -1;
+    max = -1;
+    isFilled = false;
+
+    //첫 시작 위치 탐색
+    for (j = 0; j < SIZE; j++){
+      if (table[i][j] !== false){
+        min = j;
+        break;
+      }
+    }
+    if (min === -1) continue; //빈 공간이 없을 경우
+
+    //최대 가능한 위치 탐색
+    for (j = min; j < SIZE; j++){
+      if (table[i][j] !== false){
+        max = j;
+        if (table[i][j] === true) isFilled = true;
+      }
+      else break;
+    }
+    if (!isFilled) continue; //채워진 칸이 공간에 없을 경우
+
+    if (row[i][0] === max - min + 1){ //조건에 만족할경우
+      for (j = min; j <= max; j++){
+        table[i][j] = true; //칸 색칠
+      }
+    }
+  }
+
+  //우->좌
+  for (i = 0; i < SIZE; i++){
+    
+    min = -1;
+    max = -1;
+    isFilled = false;
+
+    //첫 시작 위치 탐색
+    for (j = SIZE - 1; j >= 0; j--){
+      if (table[i][j] !== false){
+        max = j;
+        break;
+      }
+    }
+    if (max === -1) continue; //빈 공간이 없을 경우
+
+    //최대 가능한 위치 탐색
+    for (j = max; j >= 0; j--){
+      if (table[i][j] !== false){
+        min = j;
+        if (table[i][j] === true) isFilled = true;
+      }
+      else break;
+    }
+    if (!isFilled) continue;
+
+    if (row[i][row[i].length - 1] === max - min + 1){ //조건에 만족할경우
+      for (j = min; j <= max; j++){
+        table[i][j] = true; //칸 색칠
+      }
+    }
+  }
+
+  //세로 체크
+  for (j = 0; j < SIZE; j++){
+    //색칠 가능한 최초의 위치 탐색(상 -> 하)
+    min = -1;
+    max = -1;
+    isFilled = false;
+
+    //첫 시작 위치 탐색
+    for (i = 0; i < SIZE; i++){
+      if (table[i][j] !== false){
+        min = i;
+        break;
+      }
+    }
+    if (min === -1) continue; //빈 공간이 없을 경우
+
+    //최대 가능한 위치 탐색
+    for (i = min; i < SIZE; i++){
+      if (table[i][j] !== false){
+        max = i;
+        if (table[i][j] === true) isFilled = true;
+      }
+      else break;
+    }
+    if (!isFilled) continue;
+
+    if (column[j][0] === max - min + 1){ //조건에 만족할경우
+      for (i = min; i <= max; i++){
+        table[i][j] = true; //칸 색칠
+      }
+    }
+  }
+
+  //하->상
+  for (j = 0; j < SIZE; j++){
+  
+    min = -1;
+    max = -1;
+    isFilled = false;
+
+    //첫 시작 위치 탐색
+    for (i = SIZE - 1; i >= 0; i--){
+      if (table[i][j] !== false){
+        max = i;
+        break;
+      }
+    }
+    if (max === -1) continue; //빈 공간이 없을 경우
+
+    //최대 가능한 위치 탐색
+    for (i = max; i >= 0; i--){
+      if (table[i][j] !== false){
+        min = i;
+        if (table[i][j] === true) isFilled = true;
+      }
+    }
+    if (!isFilled) continue;
+
+    if (column[j][column[j].length - 1] === max - min + 1){ //조건에 만족할경우
+      for (i = min; i <= max; i++){
+        table[i][j] = true; //칸 색칠
+      }
+    }
+  }
+}
 function equal(arr1 : Array<number>, arr2 : Array<number>): number {
   var i = 0, SIZE = 0;
 
@@ -414,7 +664,7 @@ const fillAdd = (table: Array<Array<boolean | null>>, row: Array<Array<number>>,
   }
 }
 
-// 짜는 중
+//가장 큰 조건값과 빈 공간의 최대 크기가 같으면 채우기 (X로 구분됨)
 const sequenceX = (table: Array<Array<boolean | null>>, row: Array<Array<number>>, column: Array<Array<number>>) => {
   var SIZE = row.length;
   var buffer = [];

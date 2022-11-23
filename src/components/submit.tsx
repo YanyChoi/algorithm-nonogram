@@ -95,6 +95,9 @@ function checkResult(table: Array<Array<boolean | null>>, row: Array<Array<numbe
     if(buffer.length == 0) {
       buffer.push(0);
     }
+
+    console.log(row[h]);
+    console.log(buffer);
     // 배열이 같은지 비교
     if(!equal(row[h], buffer)) {
       return 0;
@@ -112,10 +115,10 @@ function equal(arr1 : Array<number>, arr2 : Array<number>): number {
     SIZE = arr1.length;
     for(i = 0 ; i < SIZE ; i++) { // 하나씩 비교
       if(arr1[i] != arr2[i]) { // element가 틀리면
-        break; // 종료
+        return 0;
       }
-      return 1;
     }
+    return 1;
   }
   return 0;
 }
