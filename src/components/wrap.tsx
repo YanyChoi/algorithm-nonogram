@@ -6,11 +6,15 @@ import Header from "./header/header";
 import HelpButton from "./help-button";
 import SubmitButton from "./submit";
 import Table from "./table/table";
+import Confetti from "react-confetti";
+import { useWindowSize } from "react-use";
 
 const Wrap = () => {
   const { finalMessage, startTime, endTime } = useContext(
     Context
   ) as ContextType;
+  const { width, height } = useWindowSize();
+
   return (
     <>
       <Header />
@@ -25,6 +29,14 @@ const Wrap = () => {
         <div style={{ width: "100px" }} />
         <SubmitButton />
       </Grid>
+      {finalMessage === "correct answer." && (
+        <Confetti
+          width={width}
+          height={height}
+          gravity={0.5}
+          numberOfPieces={400}
+        />
+      )}
     </>
   );
 };

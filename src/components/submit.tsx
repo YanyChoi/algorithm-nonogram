@@ -39,12 +39,12 @@ const SubmitButton = () => {
   );
 };
 
-function checkResult(
+const checkResult = (
   table: Array<Array<boolean | null>>,
   row: Array<Array<number>>,
   column: Array<Array<number>>
-): number {
-  var SIZE = row.length;
+): boolean => {
+  const SIZE = row.length;
   var buffer = [];
   var is_true = 0;
   var h = 0,
@@ -77,7 +77,7 @@ function checkResult(
     }
     // 배열이 같은지 비교
     if (!equal(column[w], buffer)) {
-      return 0;
+      return false;
     }
   }
 
@@ -111,15 +111,15 @@ function checkResult(
     console.log(buffer);
     // 배열이 같은지 비교
     if (!equal(row[h], buffer)) {
-      return 0;
+      return false;
     }
   }
 
   // 아무 문제 없으면
-  return 1;
-}
+  return true;
+};
 
-function equal(arr1: Array<number>, arr2: Array<number>): number {
+const equal = (arr1: Array<number>, arr2: Array<number>): boolean => {
   var i = 0,
     SIZE = 0;
 
@@ -130,11 +130,11 @@ function equal(arr1: Array<number>, arr2: Array<number>): number {
       // 하나씩 비교
       if (arr1[i] !== arr2[i]) {
         // element가 틀리면
-        return 0;
+        return false;
       }
     }
-    return 1;
+    return true;
   }
-  return 0;
-}
+  return false;
+};
 export default SubmitButton;
