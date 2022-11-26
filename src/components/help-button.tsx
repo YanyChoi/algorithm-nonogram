@@ -15,7 +15,7 @@ const HelpButton = () => {
   } = useContext(Context) as ContextType;
   return (
     <Button
-      disabled={!isGameStarted || tableSize > 10}
+      disabled={!isGameStarted || tableSize >= 10}
       variant="contained"
       style={{
         marginTop: "30px",
