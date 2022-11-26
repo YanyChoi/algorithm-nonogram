@@ -5,11 +5,17 @@ import { ContextType } from "../types/context";
 import autoSolve from "../utils/auto-solve";
 
 const HelpButton = () => {
-  const { columnConditions, rowConditions, table, isGameStarted, setTable } =
-    useContext(Context) as ContextType;
+  const {
+    columnConditions,
+    rowConditions,
+    table,
+    isGameStarted,
+    tableSize,
+    setTable,
+  } = useContext(Context) as ContextType;
   return (
     <Button
-      disabled={!isGameStarted}
+      disabled={!isGameStarted || tableSize > 10}
       variant="contained"
       style={{
         marginTop: "30px",

@@ -1,5 +1,4 @@
-import { tab } from "@testing-library/user-event/dist/tab";
-import { maxHeaderSize } from "http";
+import { checkResult } from "../components/submit";
 
 const autoSolve = ({
   rowConditions,
@@ -11,48 +10,167 @@ const autoSolve = ({
   table: Array<Array<boolean | null>>;
 }) => {
   // const previous_table:Array<Array<boolean | null>> = [];
-  let previous_table = table;
-  let current_table;
-  let count = 0;
 
   // 노베이스
-  current_table = noBaseFunc3({
+  const current_table = noBaseFunc3({
     SIZE: table.length,
     row: rowConditions,
     column: columnConditions,
   }); // 노베이스 상황일 때 채워줌
-  printTable(current_table);
+
+  const result = dfs(current_table, rowConditions, columnConditions, 0);
+
+  if (result === null) {
+    return current_table;
+  }
+
+  return result;
+};
+
+const optimize = ({
+  rowConditions,
+  columnConditions,
+  table,
+}: {
+  rowConditions: Array<Array<number>>;
+  columnConditions: Array<Array<number>>;
+  table: Array<Array<boolean | null>>;
+}) => {
+  // const previous_table:Array<Array<boolean | null>> = [];
+  let previous_table: Array<Array<boolean | null>> = [];
+  let current_table: Array<Array<boolean | null>> = table;
+  let i, j;
+  const SIZE = table.length;
+
+  //set previous_table empty table
+  for (i = 0; i < SIZE; i++) {
+    let new_row = [];
+    for (j = 0; j < SIZE; j++) {
+      new_row.push(null);
+    }
+    previous_table.push(new_row);
+  }
+
   do {
-    count++;
     copyTable(previous_table, current_table);
     fill(current_table, rowConditions, columnConditions); // X가 아닌값을 정렬했을때 모든 조건과 일치하면 채워줌
     fillAdd(current_table, rowConditions, columnConditions); // 조건 가장 큰 값과 버퍼 가장 큰 값이 서로 같고 하나씩 밖에 없으면 채워줌
     fillEnds(current_table, rowConditions, columnConditions); //끝 쪽부터 최대로 채울 수 있는 공간 탐색 ([끝쪽 빈 공간 개수] === [끝 조건 숫자] 이고 하나라도 색이 칠해진 경우, X도 고려)
     decreaseSize(current_table, rowConditions, columnConditions); // 양옆이 X일때 맵 사이즈가 줄었다고 가정하고 색칠하기
-    printTable(current_table);
     processX(current_table, rowConditions, columnConditions); // X process
-    printTable(current_table);
-    console.log("COUNT : ", count);
-  } while (!isEqualTable(current_table, previous_table)); // 둘이 같지 않을 때 까지
+  } while (!isEqualTable(current_table, previous_table)); // 둘이 같지 않으면 반복
+
   // } while(false);\
-  printTable(current_table);
-  return current_table;
 };
 
-//현재 테이블 상태 로그
-const printTable = (table: Array<Array<boolean | null>>) => {
-  let i = 0,
-    j = 0,
-    line = "";
-  const SIZE = table.length;
+//백트래킹 로직
+const dfs = (
+  cur_table: Array<Array<boolean | null>>,
+  row: Array<Array<number>>,
+  column: Array<Array<number>>,
+  pos: number
+): Array<Array<boolean | null>> | null => {
+  //성공 시 테이블, 아니면 null 리턴
+
+  let next_table: Array<Array<boolean | null>> = [];
+  let i, j;
+  const SIZE = cur_table.length;
+
+  //복사본 생성 (next_table = table)
   for (i = 0; i < SIZE; i++) {
+    let new_row: Array<boolean | null> = [];
     for (j = 0; j < SIZE; j++) {
-      line += table[i][j] + " ";
+      new_row.push(cur_table[i][j]);
     }
-    line += "\n";
+    next_table.push(new_row);
   }
-  console.log(line);
+
+  //기존 알고리즘 수행 (next_table 업데이트)
+  optimize({ rowConditions: row, columnConditions: column, table: next_table });
+
+  if (checkResult(next_table, row, column)) {
+    //Solve 완료 시
+    return next_table;
+  }
+
+  //백트래킹 시행
+  while (pos < SIZE * SIZE) {
+    //모든 칸을 다 살펴볼 때까지
+    i = Math.floor(pos / SIZE);
+    j = pos % SIZE;
+
+    if (next_table[i][j] === null) {
+      //빈 공간 발견 시
+      next_table[i][j] = true; //색을 칠한다
+      if (is_promising(next_table, row, column)) {
+        //모순 없을 경우
+        let result = dfs(next_table, row, column, pos + 1); //다음 노드 탐색
+
+        if (result !== null) return result; //성공 시
+      }
+      next_table[i][j] = false; //색 칠할 시 모순이 생기므로 X 표시한다
+    }
+
+    pos++;
+  }
+
+  return null;
 };
+
+//table에 모순이 없는지 검사. (각 행, 열 조건의 숫자의 합 < 각 행, 열의 테이블에 색칠된 칸의 개수) 이면 모순 발생.
+//또는 반대로 X의 개수가 (SIZE - 조건 숫자의 합)보다 많아도 모순 발생.
+//메인 알고리즘에서 해결되는 부분이 많으므로 모순 검사는 간단히 진행함.
+const is_promising = (
+  table: Array<Array<boolean | null>>,
+  row: Array<Array<number>>,
+  column: Array<Array<number>>
+) => {
+  let i, j, fill_count, x_count, sum;
+  const SIZE = table.length;
+
+  //가로 체크
+  for (i = 0; i < SIZE; i++) {
+    fill_count = 0;
+    x_count = 0;
+    sum = 0;
+    for (j = 0; j < SIZE; j++) {
+      //색칠된 칸의 수
+      if (table[i][j] === true) fill_count++;
+      else if (table[i][j] === false) x_count++;
+    }
+
+    for (j = 0; j < row[i].length; j++) {
+      //조건 숫자의 합
+      sum += row[i][j];
+    }
+
+    if (fill_count > sum) return false; //색칠된 칸의 수가 조건 숫자의 합보다 크면 모순
+    if (x_count > SIZE - sum) return false; //X의 개수가 (SIZE - 조건 숫자의 합)보다 많으면 모순
+  }
+
+  //세로 체크
+  for (j = 0; j < SIZE; j++) {
+    fill_count = 0;
+    x_count = 0;
+    sum = 0;
+    for (i = 0; i < SIZE; i++) {
+      //색칠된 칸의 수
+      if (table[i][j] === true) fill_count++;
+      else if (table[i][j] === false) x_count++;
+    }
+
+    for (i = 0; i < column[j].length; i++) {
+      //조건 숫자의 합
+      sum += column[j][i];
+    }
+
+    if (fill_count > sum) return false; //색칠된 칸의 수가 조건 숫자의 합보다 크면 모순
+    if (x_count > SIZE - sum) return false; //X의 개수가 (SIZE - 조건 숫자의 합)보다 많으면 모순
+  }
+
+  return true; //발견된 모순 없음
+};
+
 
 //공백 포함
 const sumAll = (arr: Array<number>) => {
@@ -247,17 +365,6 @@ const noBaseFunc3 = ({
         for (k = offset + remain; k < offset + column[i][j]; k++) {
           new_table[k][i] = true;
         }
-        /*
-        console.log(
-          "세로 " +
-            i +
-            "번째 열 " +
-            (offset + remain) +
-            "부터 " +
-            (column[i][j] - remain) +
-            "개 색칠"
-        );
-        */
       }
       offset += column[i][j] + 1;
     }
@@ -455,7 +562,6 @@ function isOnce(arr: Array<number>, num: number): number {
   }
 
   if (count === 0) {
-    console.log("Wrong func isOnce");
     return -1;
   } else if (count === 1) {
     return 1;
@@ -922,7 +1028,6 @@ const XCondition4 = ({
 }) => {
   const SIZE = table.length,
     INF = 999999;
-  // let new_table: Array<Array<boolean | null>> = [];
   let i, j;
   let min, max;
 

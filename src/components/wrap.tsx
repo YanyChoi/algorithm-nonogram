@@ -21,7 +21,7 @@ const Wrap = () => {
       <Table />
       <p style={{ textAlign: "center" }}>{`${finalMessage}`}</p>
       <p style={{ textAlign: "center" }}>
-        {finalMessage === "correct answer" &&
+        {finalMessage === "correct answer." &&
           `Took ${(endTime - startTime) / 1000}s`}
       </p>
       <Grid container direction="row" justifyContent="center">

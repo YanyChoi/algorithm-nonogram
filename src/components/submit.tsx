@@ -1,4 +1,4 @@
-import { Button, Grid } from "@mui/material";
+import { Button } from "@mui/material";
 import { useContext } from "react";
 import { Context } from "../context/context";
 import { ContextType } from "../types/context";
@@ -6,11 +6,9 @@ import { ContextType } from "../types/context";
 const SubmitButton = () => {
   const {
     table,
-    answer,
     columnConditions,
     rowConditions,
     isGameStarted,
-    tableSize,
     setFinalMessage,
     setEndTime,
   } = useContext(Context) as ContextType;
@@ -18,6 +16,7 @@ const SubmitButton = () => {
   const onClick = () => {
     if (checkResult(table, rowConditions, columnConditions)) {
       setFinalMessage("correct answer.");
+      setEndTime(new Date().getTime());
     } else {
       setFinalMessage("Wrong answer. Please try again.");
     }
@@ -39,15 +38,15 @@ const SubmitButton = () => {
   );
 };
 
-const checkResult = (
+export const checkResult = (
   table: Array<Array<boolean | null>>,
   row: Array<Array<number>>,
   column: Array<Array<number>>
 ): boolean => {
   const SIZE = row.length;
-  var buffer = [];
-  var is_true = 0;
-  var h = 0,
+  let buffer = [];
+  let is_true = 0;
+  let h = 0,
     w = 0;
 
   // 세로줄 체크
@@ -106,9 +105,6 @@ const checkResult = (
     if (buffer.length === 0) {
       buffer.push(0);
     }
-
-    console.log(row[h]);
-    console.log(buffer);
     // 배열이 같은지 비교
     if (!equal(row[h], buffer)) {
       return false;
@@ -120,13 +116,10 @@ const checkResult = (
 };
 
 const equal = (arr1: Array<number>, arr2: Array<number>): boolean => {
-  var i = 0,
-    SIZE = 0;
-
   if (arr1.length === arr2.length) {
     // 크기가 같은지
-    SIZE = arr1.length;
-    for (i = 0; i < SIZE; i++) {
+    const SIZE = arr1.length;
+    for (let i = 0; i < SIZE; i++) {
       // 하나씩 비교
       if (arr1[i] !== arr2[i]) {
         // element가 틀리면

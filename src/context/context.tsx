@@ -17,7 +17,7 @@ const ContextProvider = ({ children }: { children: JSX.Element }) => {
   const [table, setTable] = useState<Array<Array<boolean | null>>>([]);
   const [answer, setAnswer] = useState<Array<Array<boolean>>>([]);
   const [finalMessage, setFinalMessage] = useState<String>("");
-  const [startTime, setStartTime] = useState<number>(-1);
+  const [startTime, setStartTime] = useState<number>(new Date().getTime());
   const [endTime, setEndTime] = useState<number>(-1);
   return (
     <Context.Provider
