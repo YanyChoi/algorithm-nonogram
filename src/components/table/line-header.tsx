@@ -19,7 +19,7 @@ const LineHeader = ({
         direction="row"
         justifyContent="end"
         width={width}
-        height={tableSize >= 10 ? 20 : 30}
+        height={tableSize >= 10 && window?.innerWidth < 800 ? 20 : 30}
         border="thick"
         style={{
           borderRadius: "8px",
@@ -30,12 +30,16 @@ const LineHeader = ({
         {rowConditions[index]?.map((row) => (
           <p
             style={{
-              width: tableSize >= 10 ? "12px" : "19px",
-              height: tableSize >= 10 ? `20px` : `30px`,
-              fontSize: tableSize >= 10 ? "10px" : "12px",
+              width:
+                tableSize >= 10 && window?.innerWidth < 800 ? "12px" : "19px",
+              height:
+                tableSize >= 10 && window?.innerWidth < 800 ? `20px` : `30px`,
+              fontSize:
+                tableSize >= 10 && window?.innerWidth < 800 ? "10px" : "12px",
               margin: "0px",
               textAlign: "center",
-              paddingTop: tableSize >= 10 ? "6px" : "8px",
+              paddingTop:
+                tableSize >= 10 && window?.innerWidth < 800 ? "6px" : "8px",
             }}
           >
             {row}
@@ -49,7 +53,7 @@ const LineHeader = ({
         container
         direction="column"
         justifyContent="end"
-        width={tableSize >= 10 ? 20 : 30}
+        width={tableSize >= 10 && window?.innerWidth < 800 ? 20 : 30}
         height={height}
         style={{
           borderRadius: "8px",
@@ -59,9 +63,12 @@ const LineHeader = ({
         {columnConditions[index]?.map((column) => (
           <p
             style={{
-              width: tableSize >= 10 ? `20px` : `30px`,
-              height: tableSize >= 10 ? "14px" : "19px",
-              fontSize: tableSize >= 10 ? "10px" : "12px",
+              width:
+                tableSize >= 10 && window?.innerWidth < 800 ? `20px` : `30px`,
+              height:
+                tableSize >= 10 && window?.innerWidth < 800 ? "14px" : "19px",
+              fontSize:
+                tableSize >= 10 && window?.innerWidth < 800 ? "10px" : "12px",
               margin: "0px",
               textAlign: "center",
             }}

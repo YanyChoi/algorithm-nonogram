@@ -1,5 +1,5 @@
 import { CircularProgress, Grid } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { Context } from "../../context/context";
 import { ContextType } from "../../types/context";
 import { setTableBySize } from "../../utils/set-table-by-size";
@@ -36,7 +36,11 @@ const Table = () => {
             container
             flexDirection="row"
             justifyContent="space-between"
-            width={((tableSize >= 10 ? 20 : 30) + 3) * tableSize + width}
+            width={
+              ((tableSize >= 10 && window?.innerWidth < 800 ? 22 : 33)) *
+                tableSize +
+              width
+            }
             height={height + 5}
             style={{ margin: "0 auto" }}
           >
@@ -49,8 +53,15 @@ const Table = () => {
             container
             flexDirection="column"
             justifyContent="space-between"
-            width={((tableSize >= 10 ? 20 : 30) + 3) * tableSize + width}
-            height={((tableSize >= 10 ? 20 : 30) + 3) * tableSize}
+            width={
+              ((tableSize >= 10 && window?.innerWidth < 800 ? 22 : 33)) *
+                tableSize +
+              width
+            }
+            height={
+              ((tableSize >= 10 && window?.innerWidth < 800 ? 22 : 33)) *
+              tableSize
+            }
             style={{ margin: "0 auto" }}
             onMouseLeave={() => {
               if (mouseDown) {
@@ -65,7 +76,10 @@ const Table = () => {
                   flexDirection="row"
                   justifyContent="space-between"
                   style={{
-                    height: tableSize >= 10 ? `20px` : `30px`
+                    height:
+                      tableSize >= 10 && window?.innerWidth < 800
+                        ? `20px`
+                        : `30px`,
                   }}
                 >
                   <LineHeader direction="row" index={rowIndex} />

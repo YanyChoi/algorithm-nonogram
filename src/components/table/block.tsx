@@ -34,8 +34,8 @@ const Block = ({
   return (
     <Grid
       container
-      width={tableSize >= 10 ? 20 : 30}
-      height={tableSize >= 10 ? 20 : 30}
+      width={tableSize >= 10 && window?.innerWidth < 800 ? 20 : 30}
+      height={tableSize >= 10 && window?.innerWidth < 800 ? 20 : 30}
       style={{
         border: "1px solid grey",
         borderRadius: "5px",
@@ -80,7 +80,8 @@ const Block = ({
     >
       <p
         style={{
-          fontSize: tableSize >= 10 ? "10px" : "15pt",
+          fontSize:
+            tableSize >= 10 && window?.innerWidth < 800 ? "10px" : "15pt",
           color: `${value === "X" ? "red" : "black"}`,
           margin: "0 auto",
           padding: "2px 0px 0px 1px",

@@ -73,12 +73,12 @@ const Header = () => {
             setColumnConditions(conditions.columns);
             setRowConditions(conditions.rows);
             setWidth(
-              tableSize >= 10
+              tableSize >= 10 && window?.innerWidth < 800
                 ? conditions.maxWidth * 12
                 : conditions.maxWidth * 20
             );
             setHeight(
-              tableSize >= 10
+              tableSize >= 10 && window?.innerWidth < 800
                 ? conditions.maxHeight * 14 + 5
                 : conditions.maxHeight * 20 + 5
             );
