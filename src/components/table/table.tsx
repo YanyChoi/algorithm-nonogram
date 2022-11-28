@@ -36,7 +36,7 @@ const Table = () => {
             container
             flexDirection="row"
             justifyContent="space-between"
-            width={33 * tableSize + width}
+            width={((tableSize >= 10 ? 20 : 30) + 3) * tableSize + width}
             height={height + 5}
             style={{ margin: "0 auto" }}
           >
@@ -49,8 +49,8 @@ const Table = () => {
             container
             flexDirection="column"
             justifyContent="space-between"
-            width={33 * tableSize + width + 5}
-            height={33 * tableSize}
+            width={((tableSize >= 10 ? 20 : 30) + 3) * tableSize + width}
+            height={((tableSize >= 10 ? 20 : 30) + 3) * tableSize}
             style={{ margin: "0 auto" }}
             onMouseLeave={() => {
               if (mouseDown) {
@@ -64,6 +64,9 @@ const Table = () => {
                   container
                   flexDirection="row"
                   justifyContent="space-between"
+                  style={{
+                    height: tableSize >= 10 ? `20px` : `30px`
+                  }}
                 >
                   <LineHeader direction="row" index={rowIndex} />
                   {row.map((value, columnIndex) => (

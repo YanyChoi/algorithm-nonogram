@@ -10,9 +10,8 @@ const LineHeader = ({
   direction: String;
   index: number;
 }) => {
-  const { columnConditions, rowConditions, width, height } = useContext(
-    Context
-  ) as ContextType;
+  const { columnConditions, rowConditions, width, height, tableSize } =
+    useContext(Context) as ContextType;
   if (direction === "row") {
     return (
       <Grid
@@ -20,7 +19,7 @@ const LineHeader = ({
         direction="row"
         justifyContent="end"
         width={width}
-        height={30}
+        height={tableSize >= 10 ? 20 : 30}
         border="thick"
         style={{
           borderRadius: "8px",
@@ -31,12 +30,12 @@ const LineHeader = ({
         {rowConditions[index]?.map((row) => (
           <p
             style={{
-              width: "17px",
-              height: "30px",
-              fontSize: "12px",
+              width: tableSize >= 10 ? "12px" : "19px",
+              height: tableSize >= 10 ? `20px` : `30px`,
+              fontSize: tableSize >= 10 ? "10px" : "12px",
               margin: "0px",
               textAlign: "center",
-              paddingTop: "8px",
+              paddingTop: tableSize >= 10 ? "6px" : "8px",
             }}
           >
             {row}
@@ -50,7 +49,7 @@ const LineHeader = ({
         container
         direction="column"
         justifyContent="end"
-        width={30}
+        width={tableSize >= 10 ? 20 : 30}
         height={height}
         style={{
           borderRadius: "8px",
@@ -60,9 +59,9 @@ const LineHeader = ({
         {columnConditions[index]?.map((column) => (
           <p
             style={{
-              width: "30px",
-              height: "20px",
-              fontSize: "12px",
+              width: tableSize >= 10 ? `20px` : `30px`,
+              height: tableSize >= 10 ? "14px" : "19px",
+              fontSize: tableSize >= 10 ? "10px" : "12px",
               margin: "0px",
               textAlign: "center",
             }}

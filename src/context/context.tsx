@@ -4,7 +4,7 @@ import { ContextType } from "../types/context";
 export const Context = createContext<ContextType | null>(null);
 
 const ContextProvider = ({ children }: { children: JSX.Element }) => {
-  const [tableSize, setTableSize] = useState<number>(15);
+  const [tableSize, setTableSize] = useState<number>(8);
   const [isGameStarted, setIsGameStarted] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rowConditions, setRowConditions] = useState<Array<Array<number>>>([]);

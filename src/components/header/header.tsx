@@ -57,7 +57,7 @@ const Header = () => {
               setRowConditions([]);
             }}
             style={{
-              width: "300px",
+              width: "280px",
               margin: "0 auto",
             }}
           />
@@ -72,8 +72,16 @@ const Header = () => {
             const conditions = createProblem(newAnswer);
             setColumnConditions(conditions.columns);
             setRowConditions(conditions.rows);
-            setWidth(conditions.maxWidth * 20);
-            setHeight(conditions.maxHeight * 20 + 5);
+            setWidth(
+              tableSize >= 10
+                ? conditions.maxWidth * 12
+                : conditions.maxWidth * 20
+            );
+            setHeight(
+              tableSize >= 10
+                ? conditions.maxHeight * 14 + 5
+                : conditions.maxHeight * 20 + 5
+            );
           } else {
             setStartTime(new Date().getTime());
             setFinalMessage("");

@@ -12,18 +12,8 @@ const Block = ({
   x: number;
   y: number;
 }) => {
-  const display = (type: boolean | null) => {
-    if (type) {
-      return "O";
-    } else if (type === null) {
-      return "";
-    } else {
-      return "X";
-    }
-  };
-  const { isGameStarted, mouseDown, setMouseDown, table } = useContext(
-    Context
-  ) as ContextType;
+  const { isGameStarted, mouseDown, setMouseDown, table, tableSize } =
+    useContext(Context) as ContextType;
   const [changed, setChanged] = useState<boolean>(false);
   const [value, setValue] = useState<String>("");
   useEffect(() => {
@@ -44,8 +34,8 @@ const Block = ({
   return (
     <Grid
       container
-      width={30}
-      height={30}
+      width={tableSize >= 10 ? 20 : 30}
+      height={tableSize >= 10 ? 20 : 30}
       style={{
         border: "1px solid grey",
         borderRadius: "5px",
@@ -90,7 +80,7 @@ const Block = ({
     >
       <p
         style={{
-          fontSize: "15pt",
+          fontSize: tableSize >= 10 ? "10px" : "15pt",
           color: `${value === "X" ? "red" : "black"}`,
           margin: "0 auto",
           padding: "2px 0px 0px 1px",

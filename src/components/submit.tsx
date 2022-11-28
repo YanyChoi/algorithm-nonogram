@@ -27,9 +27,8 @@ const SubmitButton = () => {
       variant="contained"
       style={{
         marginTop: "30px",
-        width: "200px",
-        height: "50px",
-        fontSize: "20pt",
+        width: "calc(40vw)",
+        fontSize: "20px",
       }}
       onClick={onClick}
     >

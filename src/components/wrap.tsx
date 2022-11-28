@@ -24,9 +24,8 @@ const Wrap = () => {
         {finalMessage === "correct answer." &&
           `Took ${(endTime - startTime) / 1000}s`}
       </p>
-      <Grid container direction="row" justifyContent="center">
+      <Grid container direction="row" justifyContent="space-around">
         <HelpButton />
-        <div style={{ width: "100px" }} />
         <SubmitButton />
       </Grid>
       {finalMessage === "correct answer." && (
